@@ -13,11 +13,17 @@ const EventList = () => {
   const { data, error } = useData();
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
+  // fix: filtre par évenement et par date
+  const byDateDesc = data?.events.sort((evtA, evtB) =>
+    new Date(evtA.date) > new Date(evtB.date) ? -1 : 1
+  );
   const filteredEvents = (
+  // 17= recupere les events datas et les classes par date
     (!type
-      ? data?.events
-      : data?.events) || []
-  ).filter((event, index) => {
+      ? byDateDesc
+      : byDateDesc.filter(event => event.type === type)) || []
+      // filtrer les differents evenements par catégories
+    ).filter((event, index) => {
     if (
       (currentPage - 1) * PER_PAGE <= index &&
       PER_PAGE * currentPage > index
